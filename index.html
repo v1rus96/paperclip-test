@@ -38,6 +38,61 @@
             --animation-speed: 0.3s;
         }
 
+        /* Page load animations */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.8s ease 1.5s forwards;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeOut {
+            to { 
+                opacity: 0; 
+                visibility: hidden; 
+            }
+        }
+
+        /* Enhanced text reveal animations */
+        .text-reveal {
+            overflow: hidden;
+        }
+
+        .text-reveal .char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100px);
+            animation: charReveal 0.6s ease forwards;
+        }
+
+        @keyframes charReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Reset and base styles */
         *, *::before, *::after {
             margin: 0;
@@ -100,6 +155,21 @@
             border-bottom: 1px solid var(--glass-border);
             padding: 1rem 0;
             transition: all var(--animation-speed) ease;
+            transform: translateY(-100px);
+            animation: slideInNav 0.8s ease 0.5s forwards;
+        }
+
+        @keyframes slideInNav {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(30px);
+            padding: 0.5rem 0;
+            box-shadow: var(--shadow-medium);
         }
 
         .nav-container {
@@ -160,8 +230,50 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: shimmer 3s ease-in-out infinite;
+            animation: shimmer 3s ease-in-out infinite, titleFloat 4s ease-in-out infinite;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transform: translateY(50px) scale(0.8);
+        }
+
+        .hero-title.animate-in {
+            animation: titleReveal 1s ease 0.8s forwards, shimmer 3s ease-in-out 1.8s infinite, titleFloat 4s ease-in-out 2s infinite;
+        }
+
+        @keyframes titleReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { 
+                transform: translateY(0) scale(1); 
+            }
+            50% { 
+                transform: translateY(-10px) scale(1.02); 
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .subtitle.animate-in {
+            animation: subtitleReveal 0.8s ease 1.2s forwards;
+        }
+
+        @keyframes subtitleReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes shimmer {
@@ -194,6 +306,20 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px) rotateX(15deg);
+            perspective: 1000px;
+        }
+
+        .card.animate-in {
+            animation: cardSlideIn 0.8s ease forwards;
+        }
+
+        @keyframes cardSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
         }
 
         .card::before {
@@ -207,14 +333,36 @@
             transition: left 0.6s ease;
         }
 
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: all 0.4s ease;
+            border-radius: 50%;
+        }
+
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-medium);
-            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            box-shadow: var(--shadow-medium), 0 20px 60px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         .card:hover::before {
             left: 100%;
+        }
+
+        .card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .card:active {
+            transform: translateY(-5px) scale(0.98);
         }
 
         .card-icon {
@@ -392,6 +540,11 @@
     </style>
 </head>
 <body>
+    <!-- Page loader -->
+    <div class="page-loader">
+        <div class="loader-spinner" aria-label="Loading page content"></div>
+    </div>
+
     <!-- Animated background particles -->
     <div class="particles" aria-hidden="true"></div>
 
@@ -412,7 +565,7 @@
     <!-- Main content -->
     <main role="main" id="home">
         <div class="container">
-            <h1 class="hero-title">Hello World!</h1>
+            <h1 class="hero-title text-reveal">Hello World!</h1>
             <p class="subtitle">Welcome to the future of web development</p>
             
             <!-- Feature cards -->
@@ -530,9 +683,69 @@
             });
         });
 
+        // Text reveal animation
+        function animateText(element) {
+            const text = element.textContent;
+            const chars = text.split('');
+            element.innerHTML = '';
+            
+            chars.forEach((char, index) => {
+                const span = document.createElement('span');
+                span.className = 'char';
+                span.textContent = char === ' ' ? '\u00A0' : char; // Use non-breaking space
+                span.style.animationDelay = `${index * 0.05}s`;
+                element.appendChild(span);
+            });
+        }
+
+        // Enhanced scroll effects
+        function handleScroll() {
+            const nav = document.querySelector('nav');
+            const scrollTop = window.pageYOffset;
+            
+            // Navigation background change
+            if (scrollTop > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
+            // Parallax effect for hero
+            const hero = document.querySelector('.hero-title');
+            if (hero) {
+                const parallaxSpeed = scrollTop * 0.5;
+                hero.style.transform = `translateY(${parallaxSpeed}px)`;
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
+            
+            // Start animations after page load
+            setTimeout(() => {
+                const heroTitle = document.querySelector('.hero-title');
+                const subtitle = document.querySelector('.subtitle');
+                
+                if (heroTitle) {
+                    animateText(heroTitle);
+                    heroTitle.classList.add('animate-in');
+                }
+                
+                if (subtitle) {
+                    subtitle.classList.add('animate-in');
+                }
+                
+                // Animate cards with staggered delay
+                document.querySelectorAll('.card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('animate-in');
+                    }, index * 200);
+                });
+            }, 500);
+            
+            // Add scroll listener
+            window.addEventListener('scroll', handleScroll);
             
             // Add focus management for better accessibility
             const firstFocusableElement = document.querySelector('.logo');
@@ -541,29 +754,41 @@
             }
         });
 
-        // Performance optimization: lazy load animations
+        // Enhanced Intersection Observer for scroll-triggered animations
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: '0px 0px -100px 0px'
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                    entry.target.classList.add('animate-in');
+                    
+                    // Add ripple effect on entry
+                    const ripple = document.createElement('div');
+                    ripple.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        width: 0;
+                        height: 0;
+                        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%);
+                        animation: rippleEffect 1s ease-out forwards;
+                        pointer-events: none;
+                    `;
+                    entry.target.style.position = 'relative';
+                    entry.target.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 1000);
                 }
             });
         }, observerOptions);
-
-        // Observe cards for animation
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.card').forEach(card => {
-                observer.observe(card);
-            });
-        });
     </script>
 
-    <!-- Add fade in animation for observed elements -->
+    <!-- Additional animations -->
     <style>
         @keyframes fadeInUp {
             from {
@@ -574,6 +799,54 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        @keyframes rippleEffect {
+            to {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced button effects */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .btn:active::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* Smooth entrance animations for mobile */
+        @media (max-width: 768px) {
+            .card {
+                transform: translateY(30px);
+            }
+            
+            .hero-title {
+                transform: translateY(30px) scale(0.9);
+            }
+        }
+
+        /* Performance optimizations */
+        .card, .btn, nav {
+            will-change: transform;
         }
     </style>
 </body>
