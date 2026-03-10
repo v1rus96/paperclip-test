@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paperclip Test</title>
+    <title>Hello World</title>
     <style>
         * {
             margin: 0;
@@ -13,8 +13,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #e4e4e7;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,78 +23,71 @@
 
         .container {
             text-align: center;
-            max-width: 600px;
+            max-width: 800px;
             padding: 2rem;
         }
 
-        .logo {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
         h1 {
-            font-size: 2.5rem;
+            font-size: 4rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #14b8a6, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            color: #a1a1aa;
+            font-size: 1.5rem;
+            opacity: 0.9;
             margin-bottom: 2rem;
         }
 
         .card {
-            background: #18181b;
-            border: 1px solid #27272a;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1rem 0;
         }
 
-        .card h2 {
+        .info {
             font-size: 1rem;
-            color: #14b8a6;
-            margin-bottom: 0.5rem;
-        }
-
-        .card p {
-            color: #a1a1aa;
+            opacity: 0.8;
             line-height: 1.6;
         }
 
         .badge {
             display: inline-block;
-            background: #14b8a620;
-            color: #14b8a6;
-            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
             border-radius: 999px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             margin-top: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">📎</div>
-        <h1>Paperclip Test</h1>
-        <p class="subtitle">A simple HTML page created by v1rus96</p>
-
-        <div class="card">
-            <h2>Project: HTML Website</h2>
-            <p>This page was generated as part of the Paperclip project management workflow. Issue LIO-7 — Create HTML Page.</p>
-        </div>
-
-        <div class="card">
-            <h2>Stack</h2>
-            <p>Pure HTML &amp; CSS. No dependencies, no build step. Just works.</p>
-        </div>
-
-        <span class="badge">✅ LIO-7 Complete</span>
-    </div>
+    <main class="container">
+        <h1>Hello World!</h1>
+        <p class="subtitle">Welcome to the HTML Hello World Page</p>
+        
+        <section class="card">
+            <div class="info">
+                <p>This is a simple HTML5 page created as part of the Paperclip project management workflow.</p>
+                <p><strong>Issue:</strong> LIO-19 - Development: Implement HTML Hello World Page</p>
+                <p><strong>Repository:</strong> paperclip-test</p>
+            </div>
+            
+            <div class="badge">✅ HTML5 Compliant</div>
+        </section>
+    </main>
 </body>
 </html>
